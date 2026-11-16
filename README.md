@@ -125,7 +125,7 @@ Configure environment variables `APP_EMAIL` and `APP_PASSWORD` or edit [`src/jav
 2. Resolve any missing server targets by selecting your **GlassFish** or **Tomcat** instance.
 3. Clean and Build the project.
 4. Click **Run** or deploy the generated `.war` onto your application server.
-5. Visit `http://localhost:8080/WEB2_shop/` (or your configured context root).
+5. Visit `http://localhost:8080/E-Store/` (or your configured context root).
 
 ---
 
