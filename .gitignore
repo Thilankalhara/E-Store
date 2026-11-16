@@ -1,0 +1,26 @@
+# NetBeans user-private configuration
+nbproject/private/
+
+# Build artifacts and compiled outputs
+build/
+dist/
+target/
+*.class
+*.war
+*.ear
+
+# Operating System and IDE files
+.DS_Store
+Thumbs.db
+*.bak
+*.tmp
+*.swp
+*~
+.idea/
+*.iml
+.vscode/
+.settings/
+
+# Runtime and log files
+*.log
+*.pid

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment Success - E Store</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body { background:#f8f9fa; }
+    .success-box { 
+      max-width:600px; margin:50px auto; background:#fff; 
+      padding:30px; border-radius:8px; text-align:center;
+      box-shadow:0 2px 6px rgba(0,0,0,.1);
+    }
+    h3 { color:#28a745; }
+  </style>
+</head>
+<body>
+  <div class="success-box">
+    <h3>✅ Payment Successful!</h3>
+    <p>Thank you for your purchase. We are sending your invoice...</p>
+    <div id="status" class="text-muted">Sending invoice...</div>
+  </div>
+
+<script>
+$(document).ready(function() {
+  $.ajax({
+    url: "SendInvoice",
+    type: "POST",
+    dataType: "json",
+    success: function(res) {
+      if (res.success) {
+        $("#status").text("Invoice sent to your email ✔");
+        setTimeout(function() {
+          window.location.href = "index.html";
+        }, 2000);
+      } else {
+        $("#status").text("Payment done, but invoice failed: " + res.message);
+        setTimeout(function() {
+          window.location.href = "index.html";
+        }, 4000);
+      }
+    },
+    error: function() {
+      $("#status").text("Error sending invoice. Please contact support.");
+      // Force redirect after 4 seconds even if error
+      setTimeout(function() {
+        window.location.href = "index.html";
+      }, 4000);
+    }
+  });
+});
+</script>
+</body>
+</html>

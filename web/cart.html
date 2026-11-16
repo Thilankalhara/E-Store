@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cart - E Store</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+</head>
+<body>
+<div class="container my-4">
+    <h3>Your Cart</h3>
+    <div class="table-responsive">
+        <table class="table table-bordered" id="cart-table">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="cart-body"></tbody>
+        </table>
+    </div>
+
+    <div class="text-right my-3">
+        <h5>Grand Total: $<span id="grand-total">0.00</span></h5>
+        <button id="continue-shopping" class="btn btn-secondary mr-2">Continue Shopping</button>
+        <button id="checkout" class="btn btn-primary">Checkout</button>
+    </div>
+</div>
+
+<script>
+function loadCart() {
+  $.get('GetCart', function(res) {
+    if(!res.success){
+      if(res.redirect) window.location.href = res.redirect;
+      return;
+    }
+
+    let tbody = $('#cart-body');
+    tbody.empty();
+
+    if(res.carts.length === 0){
+      tbody.append(`<tr><td colspan="5" class="text-center">Your cart is empty</td></tr>`);
+      $('#grand-total').text('0.00');
+      return;
+    }
+
+    let grandTotal = 0;
+
+    res.carts.forEach(item => {
+      let total = item.price * item.quantity;
+      grandTotal += total;
+
+      tbody.append(`
+        <tr data-cart-id="${item.id}" data-max-qty="${item.maxQty}">
+          <td><img src="${item.image}" width="50"> ${item.productName}</td>
+          <td>$${item.price}</td>
+          <td><input type="number" class="form-control qty-input" value="${item.quantity}" min="1" max="${item.maxQty}" style="width:70px;"></td>
+          <td class="item-total">$${total.toFixed(2)}</td>
+          <td>
+            <button class="btn btn-success btn-sm update">Update</button>
+            <button class="btn btn-danger btn-sm delete">Delete</button>
+          </td>
+        </tr>
+      `);
+    });
+
+    $('#grand-total').text(grandTotal.toFixed(2));
+  }, 'json');
+}
+
+function updateGrandTotal(){
+  let total = 0;
+  $('#cart-body tr').each(function(){
+    let price = parseFloat($(this).find('td:nth-child(2)').text().replace('$',''));
+    let qty = parseInt($(this).find('.qty-input').val());
+    $(this).find('.item-total').text('$'+(price*qty).toFixed(2));
+    total += price*qty;
+  });
+  $('#grand-total').text(total.toFixed(2));
+}
+
+function updateCart(row) {
+  let cartId = row.data('cart-id');
+  let qty = parseInt(row.find('.qty-input').val());
+  let max = parseInt(row.data('max-qty'));
+
+  if(qty > max){
+    alert("Available quantity: " + max);
+    row.find('.qty-input').val(max);
+    updateGrandTotal();
+    return;
+  }
+
+  $.post('UpdateCart', { cartId: cartId, qty: qty }, function(res){
+    if(!res.success) alert(res.message);
+    loadCart(); // refresh cart after update
+  }, 'json');
+}
+
+// ---------------- Events ----------------
+$(document).on('click', '.update', function(){
+  let row = $(this).closest('tr');
+  updateCart(row);
+});
+
+$(document).on('click', '.delete', function(){
+  let row = $(this).closest('tr');
+  let cartId = row.data('cart-id');
+  $.post('DeleteCart', { cartId: cartId }, function(res){
+    if(res.success) loadCart(); // refresh after delete
+    else alert(res.message);
+  }, 'json');
+});
+
+$(document).on('input', '.qty-input', function(){
+  updateGrandTotal();
+});
+
+$('#continue-shopping').click(function(){
+  window.location.href = 'index.html';
+});
+
+// ✅ Check for address before checkout
+$('#checkout').click(function(){
+  $.get('CheckAddress', function(res){
+    if(res.success){
+      // user has address → go to checkout
+      window.location.href = 'checkout.html';
+    } else {
+      // no address → redirect to edit profile
+      alert("Please add your address before checkout!");
+      window.location.href = 'edit-profile.html';
+    }
+  }, 'json');
+});
+
+// ---------------- Initial load ----------------
+$(document).ready(function(){ 
+  loadCart(); 
+  // 🔄 Auto refresh cart every 5s (optional)
+  setInterval(loadCart, 5000);
+});
+</script>
+</body>
+</html>

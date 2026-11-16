@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <!-- Correct dialect for Hibernate 4.x with MySQL 8 -->
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>
+
+        <!-- JDBC connection settings -->
+        <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="hibernate.connection.url">
+            jdbc:mysql://localhost:3306/wb2_shop?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=UTC
+        </property>
+        <property name="hibernate.connection.username">YOUR_DB_USERNAME</property>
+        <property name="hibernate.connection.password">YOUR_DB_PASSWORD</property>
+
+        <!-- Debugging -->
+        <property name="hibernate.show_sql">true</property>
+
+        <!-- Your entity mappings -->
+        <mapping class="hibernate.User"/>
+        <mapping class="hibernate.Address"/>
+        <mapping class="hibernate.Seller"/>
+        <mapping class="hibernate.Status"/>
+        <mapping class="hibernate.Product"/>
+        <mapping class="hibernate.Cart"/>
+        <mapping class="hibernate.OrderStatus"/>
+        <mapping class="hibernate.Orders"/>
+        <mapping class="hibernate.OrderItem"/>
+    </session-factory>
+</hibernate-configuration>

@@ -1,0 +1,126 @@
+package hibernate;
+
+import java.io.Serializable;
+import java.util.Date;
+import javax.persistence.*;
+
+@Entity
+@Table(name = "user")
+public class User implements Serializable {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
+
+    @Column(name = "first_name", length = 45, nullable = false)
+    private String first_name;
+
+    @Column(name = "last_name", length = 45, nullable = false)
+    private String last_name;
+
+    @Column(name = "email", length = 100, nullable = false)
+    private String email;
+
+    @Column(name = "mobile", length = 15, nullable = false)
+    private String mobile;
+
+    @Column(name = "password", length = 255, nullable = false)
+    private String password;
+
+    @Column(name = "verification", length = 10, nullable = false)
+    private String verification;
+
+    @Column(name = "created_at", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created_at;
+
+    // Constructors
+    public User() {}
+
+    public User(String first_name, String last_name, String email, String mobile, String password, String verification) {
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.email = email;
+        this.mobile = mobile;
+        this.password = password;
+        this.verification = verification;
+        this.created_at = new Date();
+    }
+
+    // Getters and Setters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getFirst_name() {
+        return first_name;
+    }
+
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
+    }
+
+    public String getLast_name() {
+        return last_name;
+    }
+
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getVerification() {
+        return verification;
+    }
+
+    public void setVerification(String verification) {
+        this.verification = verification;
+    }
+
+    public Date getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(Date created_at) {
+        this.created_at = created_at;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", first_name='" + first_name + '\'' +
+                ", last_name='" + last_name + '\'' +
+                ", email='" + email + '\'' +
+                ", mobile='" + mobile + '\'' +
+                '}';
+    }
+}
